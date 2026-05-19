@@ -1,0 +1,28 @@
+name: Hardware ID Reset Bot
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'          # every 5 minutes
+  workflow_dispatch:                # lets you run it manually from the GitHub Actions tab
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run reset bot
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          TARGET_USERNAMES: ${{ secrets.TARGET_USERNAMES }}
+        run: python reset_bot.py
